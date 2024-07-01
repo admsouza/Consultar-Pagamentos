@@ -5,6 +5,7 @@ from collections import defaultdict
 import pandas as pd
 from io import BytesIO
 from datetime import datetime
+import locale
 
 app = Flask(__name__)
 
@@ -110,6 +111,9 @@ def download_excel():
         return send_file(output, mimetype='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet', download_name='Receitas.xlsx', as_attachment=True)
     else:
         return f"Erro ao consultar API: {response_api.status_code}", 400
+
+
+locale.setlocale(locale.LC_ALL, 'en_US.UTF-8')
 
 
 @app.template_filter('brl')
