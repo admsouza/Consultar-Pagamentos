@@ -1,15 +1,16 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Resultados da Consulta</title>
-    <link rel="icon" type="image/x-icon" href="{{ url_for('static', filename='favicon.ico') }}">
     <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='tabel.css') }}">
     <style>
 
     </style>
 </head>
+
 <body>
     <a href="/">Voltar</a>
     <h1>Resultados da Consulta</h1>
@@ -59,10 +60,11 @@
                         <td>{{ item.tipoReceitaLancada.codigo }}</td>
                         <td>{{ item.numeroReceita }}</td>
                         <td class="value">
-                            {% if item.tipoLancamento.nome == 'Estorno' or item.tipoReceitaLancada.codigo in [3, 4, 5] %}
-                                -{{ item.valor | brl }}
+                            {% if item.tipoLancamento.nome == 'Estorno' or item.tipoReceitaLancada.codigo in [3, 4, 5]
+                            %}
+                            -{{ item.valor | brl }}
                             {% else %}
-                                {{ item.valor | brl }}
+                            {{ item.valor | brl }}
                             {% endif %}
                         </td>
                         <td>{{ item.tipoFonteRecurso.codigo }}</td>
@@ -73,4 +75,5 @@
         </div>
     </div>
 </body>
+
 </html>
