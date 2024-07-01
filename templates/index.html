@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+     <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='index.css') }}">
+    <title>Consulta de Receitas</title>
+</head>
+<body>
+    <h1>Consulta de Receitas</h1>
+    <form method="POST" action="/">
+        <label for="cod_unidade">Código da Unidade Gestora:</label>
+        <input type="text" id="cod_unidade" name="cod_unidade" required><br><br>
+
+        <label for="data_minima">Data Inicial:</label>
+        <input type="date" id="data_minima" name="data_minima" required><br><br>
+
+        <label for="data_maxima">Data Final:</label>
+        <input type="date" id="data_maxima" name="data_maxima" required><br><br>
+
+        <button type="submit">Consultar</button>
+    </form>
+    {% if error %}
+        <p style="color: red;">{{ error }}</p>
+    {% endif %}
+</body>
+</html>

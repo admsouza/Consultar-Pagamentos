@@ -1,0 +1,50 @@
+table {
+    width: 50%;
+    border-collapse: collapse;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+th, td {
+    border: 1px solid black;
+    padding: 8px;
+    text-align: center; 
+}
+th {
+    background-color: #f2f2f2;
+}
+.right-align {
+    text-align: left; 
+    
+    text-align: center;
+
+}
+h1{
+    text-align: center;
+}
+.value{
+    text-align: right;
+}
+button{
+   align-self: center;
+}
+.container {
+    display: flex;
+    justify-content: space-between;
+}
+.table-wrapper {
+    flex: 1;
+    margin: 10px;
+}
+table {
+    width: 100%;
+    border-collapse: collapse;
+}
+th, td {
+    padding: 8px;
+    text-align: left;
+    border: 1px solid #ddd;
+}
+th {
+    background-color: #f2f2f2;
+}
