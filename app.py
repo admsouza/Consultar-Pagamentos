@@ -71,6 +71,7 @@ def consult_recipes():
             error = f"Erro ao consultar API: {response_api.status_code}"
             return render_template('index.html', error=error)
 
+    # Caso o método não seja POST, retorna a página inicial normalmente
     return render_template('index.html')
 
 
