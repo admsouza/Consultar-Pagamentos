@@ -88,7 +88,7 @@ def consult_recipes():
                                    receitas_por_data=receitas_por_data, estornos_por_data=estornos_por_data,
                                    deducoes_fundeb_por_data=deducoes_fundeb_por_data)
         else:
-            error = f"Erro ao consultar API: {response_api.status_code}"
+            error = f"Regras de Consulta: Intervalo máximo de 31 dias: {response_api.status_code}"
             return render_template('index.html', error=error)
 
     # Caso o método não seja POST, retorna a página inicial normalmente
