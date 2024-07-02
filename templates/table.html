@@ -1,48 +1,12 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="pt-BR">
 
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Resultados da Consulta</title>
-    <link rel="icon" type="image/x-icon" href="{{ url_for('static', filename='favicon.ico') }}">
     <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='tabel.css') }}">
 
-    <style>
-        .center-align {
-            text-align: center;
-        }
-
-        .vertical-center {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            min-height: 100vh;
-        }
-
-        .table-wrapper {
-            width: 50%;
-            margin: 0 auto;
-            text-align: center;
-        }
-
-        table {
-            width: 100%;
-            border-collapse: collapse;
-            margin-top: 20px;
-        }
-
-        table,
-        th,
-        td {
-            border: 1px solid black;
-        }
-
-        th,
-        td {
-            padding: 10px;
-        }
-    </style>
 </head>
 
 <body>
@@ -50,7 +14,11 @@
     <h1 class="center-align">Resultados da Consulta</h1>
     <h2 class="center-align">Total de Receitas<br>{{ total_receita | brl }}</h2>
 
-    <h2 class="center-align">Total de Estornos<br>{{ total_estornos | brl }}</h2>
+    <h3 class="dedu">Total de Estornos<br>{{ total_estornos | brl }}</h3>
+
+    <h3 class="dedu">Total de Deduções<br>{{ total_deducao_fundeb | brl }}</h3>
+
+    <h2 class="center-align">Receitas Líquidas<br>{{ total_receita_liquida | brl }}</h2>
 
     <form action="/" method="POST">
         <div class="center-align">
@@ -64,13 +32,14 @@
             <thead>
                 <tr>
                     <th>Data</th>
-                    <th>Soma de Estornos</th>
+                    <th>Valor</th>
                 </tr>
             </thead>
             <tbody>
                 {% for data, soma in estornos_por_data.items() %}
                 <tr>
                     <td>{{ data }}</td>
+           
                     <td>{{ soma | brl }}</td>
                 </tr>
                 {% endfor %}
@@ -84,13 +53,36 @@
             <thead>
                 <tr>
                     <th>Data</th>
-                    <th>Soma de Receitas</th>
+                    <th>Valor</th>
                 </tr>
             </thead>
             <tbody>
                 {% for data, soma in receitas_por_data.items() %}
                 <tr>
                     <td>{{ data }}</td>
+           
+                    <td>{{ soma | brl }}</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+
+    <h3 class="center-align">Total de Deduções</h3>
+    <div class="table-wrapper">
+        <table>
+            <thead>
+                <tr>
+                    <th>Data</th>
+                  
+                    <th>Valor</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for data, soma in deducoes_fundeb_por_data.items() %}
+                <tr>
+                    <td>{{ data }}</td>
+              
                     <td>{{ soma | brl }}</td>
                 </tr>
                 {% endfor %}
