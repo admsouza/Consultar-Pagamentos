@@ -5,19 +5,18 @@ from collections import defaultdict
 from datetime import datetime
 
 
+# Configuração da localidade
+locale.setlocale(locale.LC_ALL, 'pt_BR.utf8')
+
 app = Flask(__name__)
 
 API_URL = 'https://sagrescaptura.tce.pb.gov.br/api/v1/receitas-orcamentarias'
 TOKEN = '3938a148-5b81-4ad7-ba2c-dcc68e5106ff'
 
 
-def format_brl(value):
-    # Defina aqui a localidade para formatação
-    locale.setlocale(locale.LC_ALL, 'pt_BR.utf8')
-    formatted_value = locale.currency(value, grouping=True)
-    # Resetar a localidade para evitar problemas
-    locale.resetlocale(locale.LC_ALL)
-    return formatted_value
+@app.template_filter('brl')
+def brl_filter(value):
+    return format_brl(value)
 
 
 def format_brl(value):
@@ -78,11 +77,6 @@ def consult_recipes():
 
     # Caso o método não seja POST, retorna a página inicial normalmente
     return render_template('index.html')
-
-
-@app.template_filter('brl')
-def brl_filter(value):
-    return format_brl(value)
 
 
 if __name__ == '__main__':
