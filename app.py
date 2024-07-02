@@ -1,9 +1,7 @@
-from flask import Flask, render_template, request, send_file
+from flask import Flask, render_template, request
 import requests
 import locale
 from collections import defaultdict
-import pandas as pd
-from io import BytesIO
 from datetime import datetime
 
 app = Flask(__name__)
@@ -73,53 +71,6 @@ def consult_recipes():
 
     # Caso o método não seja POST, retorna a página inicial normalmente
     return render_template('index.html')
-
-
-@app.route('/download', methods=['POST'])
-def download_excel():
-    cod_unidade = request.form['cod_unidade']
-    data_minima = request.form['data_minima']
-    data_maxima = request.form['data_maxima']
-
-    params = {
-        'codUnidadeGestora': cod_unidade,
-        'dataMinima': data_minima,
-        'dataMaxima': data_maxima
-    }
-
-    headers = {
-        'AuthToken': TOKEN
-    }
-
-    response_api = requests.get(API_URL, params=params, headers=headers)
-
-    if response_api.status_code == 200:
-        data = response_api.json()
-        data = sorted(data, key=lambda x: datetime.strptime(
-            x['competencia'], '%Y-%m-%d'))  # Ordena os dados pela data
-
-        # Criar DataFrame apenas com as colunas desejadas
-        filtered_data = [{
-            'Unidade Gestora': item['codUnidadeGestora'],
-            'Data': item['competencia'],
-            'Tipo Lançamento': item['tipoLancamento']['nome'],
-            'Tipo de Receita': item['tipoReceitaLancada']['codigo'],
-            'Número': item['numeroReceita'],
-            'Valor': -item['valor'] if item['tipoLancamento']['nome'] == 'Estorno' or item['tipoReceitaLancada']['codigo'] in [3, 4, 5] else item['valor'],
-            'Fonte': item['tipoFonteRecurso']['codigo'],
-        } for item in data]
-
-        df = pd.DataFrame(filtered_data)
-
-        output = BytesIO()
-        writer = pd.ExcelWriter(output, engine='openpyxl')
-        df.to_excel(writer, index=False, sheet_name='Receitas')
-        writer.close()
-        output.seek(0)
-
-        return send_file(output, mimetype='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet', download_name='Receitas.xlsx', as_attachment=True)
-    else:
-        return f"Erro ao consultar API: {response_api.status_code}", 400
 
 
 @app.template_filter('brl')
