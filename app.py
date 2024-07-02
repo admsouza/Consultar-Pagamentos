@@ -1,6 +1,6 @@
 from flask import Flask, render_template, request
 import requests
-import babel.numbers  # Importe o módulo 'babel' para formatação de moeda
+import babel.numbers 
 from collections import defaultdict
 from datetime import datetime
 
@@ -46,30 +46,47 @@ def consult_recipes():
             data = sorted(data, key=lambda x: datetime.strptime(
                 x['competencia'], '%Y-%m-%d'))  # Ordena os dados pela data
 
-            # Calcular soma total e somas por data
+            # Calcular soma total e somas por data, excluindo códigos específicos 3, 4 e 5
             total_receita = 0
             total_estornos = 0
+            total_deducao_fundeb = 0  # Soma para dedução de receita para a formação do Fundeb
             receitas_por_data = defaultdict(float)
             estornos_por_data = defaultdict(float)
+            deducoes_fundeb_por_data = defaultdict(float)
 
             for item in data:
-                valor = - \
-                    item['valor'] if item['tipoLancamento']['nome'] == 'Estorno' else item['valor']
-                total_receita += valor
-                receitas_por_data[item['competencia']] += valor
+                valor = -item['valor'] if item['tipoLancamento']['nome'] == 'Estorno' else item['valor']
+                
+                # Verifica o tipo de receita pelo código
+                tipo_codigo = item['tipoReceitaLancada']['codigo']
+                if tipo_codigo in [3, 4, 5]:
+                    total_deducao_fundeb += valor
+                    deducoes_fundeb_por_data[item['competencia']] += valor
+                else:
+                    total_receita += valor
+                    receitas_por_data[item['competencia']] += valor
 
-                if item['tipoLancamento']['nome'] == 'Estorno':
-                    total_estornos += valor
-                    estornos_por_data[item['competencia']] += valor
+                    if item['tipoLancamento']['nome'] == 'Estorno':
+                        total_estornos += valor
+                        estornos_por_data[item['competencia']] += valor
 
+            # Calcular o total de receitas líquidas após subtrair deduções e estornos
+            total_receita_liquida = total_receita - total_deducao_fundeb
+
+            # Ordena os dicionários por data
             receitas_por_data = dict(sorted(receitas_por_data.items(),
                                             key=lambda x: datetime.strptime(x[0], '%Y-%m-%d')))
             estornos_por_data = dict(sorted(estornos_por_data.items(),
                                             key=lambda x: datetime.strptime(x[0], '%Y-%m-%d')))
+            deducoes_fundeb_por_data = dict(sorted(deducoes_fundeb_por_data.items(),
+                                                   key=lambda x: datetime.strptime(x[0], '%Y-%m-%d')))
 
+            # Passa os totais e dados para o template
             return render_template('table.html', data=data, total_receita=total_receita,
-                                   total_estornos=total_estornos, receitas_por_data=receitas_por_data,
-                                   estornos_por_data=estornos_por_data)
+                                   total_estornos=total_estornos, total_deducao_fundeb=total_deducao_fundeb,
+                                   total_receita_liquida=total_receita_liquida,
+                                   receitas_por_data=receitas_por_data, estornos_por_data=estornos_por_data,
+                                   deducoes_fundeb_por_data=deducoes_fundeb_por_data)
         else:
             error = f"Erro ao consultar API: {response_api.status_code}"
             return render_template('index.html', error=error)
