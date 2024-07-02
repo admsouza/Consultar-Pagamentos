@@ -36,4 +36,5 @@ urllib3==2.2.1
 userpath==1.9.2
 virtualenv==20.26.2
 Werkzeug==3.0.3
+babel
 

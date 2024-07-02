@@ -1,23 +1,19 @@
 from flask import Flask, render_template, request, send_file
 import requests
-import locale
 from collections import defaultdict
 import pandas as pd
 from io import BytesIO
 from datetime import datetime
-import locale
+from babel.numbers import format_currency
 
 app = Flask(__name__)
 
 API_URL = 'https://sagrescaptura.tce.pb.gov.br/api/v1/receitas-orcamentarias'
 TOKEN = '3938a148-5b81-4ad7-ba2c-dcc68e5106ff'
 
-# # Configurar localidade para português do Brasil
-# locale.setlocale(locale.LC_ALL, 'pt_BR.UTF-8')
-
 
 def format_brl(value):
-    return locale.currency(value, grouping=True)
+    return format_currency(value, 'BRL', locale='pt_BR')
 
 
 @app.route('/', methods=['GET', 'POST'])
@@ -111,9 +107,6 @@ def download_excel():
         return send_file(output, mimetype='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet', download_name='Receitas.xlsx', as_attachment=True)
     else:
         return f"Erro ao consultar API: {response_api.status_code}", 400
-
-
-locale.setlocale(locale.LC_ALL, 'en_US.UTF-8')
 
 
 @app.template_filter('brl')
