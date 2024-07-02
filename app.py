@@ -22,7 +22,6 @@ def format_brl(value):
 @app.route('/', methods=['GET', 'POST'])
 def consult_recipes():
     if request.method == 'POST':
-        print(request.form)
         cod_unidade = request.form['cod_unidade']
         data_minima = request.form['data_minima']
         data_maxima = request.form['data_maxima']
