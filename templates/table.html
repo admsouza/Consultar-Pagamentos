@@ -5,75 +5,99 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Resultados da Consulta</title>
+    <link rel="icon" type="image/x-icon" href="{{ url_for('static', filename='favicon.ico') }}">
     <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='tabel.css') }}">
-    <style>
 
+    <style>
+        .center-align {
+            text-align: center;
+        }
+
+        .vertical-center {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+        }
+
+        .table-wrapper {
+            width: 50%;
+            margin: 0 auto;
+            text-align: center;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+
+        table,
+        th,
+        td {
+            border: 1px solid black;
+        }
+
+        th,
+        td {
+            padding: 10px;
+        }
     </style>
 </head>
 
 <body>
-    <a href="/">Voltar</a>
-    <h1>Resultados da Consulta</h1>
-    <h2 class="right-align">Total de Receitas<br>{{ total_receita | brl }}</h2>
+    <a href="/" class="center-align">Voltar</a>
+    <h1 class="center-align">Resultados da Consulta</h1>
+    <h2 class="center-align">Total de Receitas<br>{{ total_receita | brl }}</h2>
 
-    <div class="container">
-        <div class="table-wrapper">
-            <h3>Receitas Agrupadas por Data</h3>
-            <table>
-                <thead>
-                    <tr>
-                        <th>Data</th>
-                        <th>Soma de Valores</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    {% for data, soma in receitas_por_data.items() %}
-                    <tr>
-                        <td>{{ data }}</td>
-                        <td>{{ soma | brl }}</td>
-                    </tr>
-                    {% endfor %}
-                </tbody>
-            </table>
-        </div>
+    <h2 class="center-align">Total de Estornos<br>{{ total_estornos | brl }}</h2>
 
-        <div class="table-wrapper">
-            <h3>Detalhes das Receitas</h3>
-            <table>
-                <thead>
-                    <tr>
-                        <th>Unidade Gestora</th>
-                        <th>Data</th>
-                        <th>Tipo Lançamento</th>
-                        <th>Tipo de Receita</th>
-                        <th>Número</th>
-                        <th>Valor</th>
-                        <th>Fonte</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    {% for item in data %}
-                    <tr>
-                        <td>{{ item.codUnidadeGestora }}</td>
-                        <td>{{ item.competencia }}</td>
-                        <td>{{ item.tipoLancamento.nome }}</td>
-                        <td>{{ item.tipoReceitaLancada.codigo }}</td>
-                        <td>{{ item.numeroReceita }}</td>
-                        <td class="value">
-                            {% if item.tipoLancamento.nome == 'Estorno' or item.tipoReceitaLancada.codigo in [3, 4, 5]
-                            %}
-                            -{{ item.valor | brl }}
-                            {% else %}
-                            {{ item.valor | brl }}
-                            {% endif %}
-                        </td>
-                        <td>{{ item.tipoFonteRecurso.codigo }}</td>
-                    </tr>
-                    {% endfor %}
-                </tbody>
-            </table>
+    <form action="/" method="POST">
+        <div class="center-align">
+            <!-- <button type="submit">Atualizar Consulta</button> -->
         </div>
+    </form>
+
+    <h3 class="center-align">Estornos Agrupados por Data</h3>
+    <div class="table-wrapper">
+        <table>
+            <thead>
+                <tr>
+                    <th>Data</th>
+                    <th>Soma de Estornos</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for data, soma in estornos_por_data.items() %}
+                <tr>
+                    <td>{{ data }}</td>
+                    <td>{{ soma | brl }}</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
     </div>
+
+    <h3 class="center-align">Receitas Agrupadas por Data</h3>
+    <div class="table-wrapper">
+        <table>
+            <thead>
+                <tr>
+                    <th>Data</th>
+                    <th>Soma de Receitas</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for data, soma in receitas_por_data.items() %}
+                <tr>
+                    <td>{{ data }}</td>
+                    <td>{{ soma | brl }}</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+
 </body>
 
 </html>

@@ -1,24 +1,28 @@
 from flask import Flask, render_template, request, send_file
 import requests
+import locale
 from collections import defaultdict
 import pandas as pd
 from io import BytesIO
 from datetime import datetime
-from babel.numbers import format_currency
 
 app = Flask(__name__)
 
 API_URL = 'https://sagrescaptura.tce.pb.gov.br/api/v1/receitas-orcamentarias'
 TOKEN = '3938a148-5b81-4ad7-ba2c-dcc68e5106ff'
 
+# Configurar localidade para português do Brasil
+locale.setlocale(locale.LC_ALL, 'pt_BR.UTF-8')
+
 
 def format_brl(value):
-    return format_currency(value, 'BRL', locale='pt_BR')
+    return locale.currency(value, grouping=True)
 
 
 @app.route('/', methods=['GET', 'POST'])
 def consult_recipes():
     if request.method == 'POST':
+        print(request.form)
         cod_unidade = request.form['cod_unidade']
         data_minima = request.form['data_minima']
         data_maxima = request.form['data_maxima']
@@ -42,18 +46,28 @@ def consult_recipes():
 
             # Calcular soma total e somas por data
             total_receita = 0
+            total_estornos = 0
             receitas_por_data = defaultdict(float)
+            estornos_por_data = defaultdict(float)
 
             for item in data:
-                valor = -item['valor'] if item['tipoLancamento']['nome'] == 'Estorno' or item['tipoReceitaLancada']['codigo'] in [
-                    3, 4, 5] else item['valor']
+                valor = - \
+                    item['valor'] if item['tipoLancamento']['nome'] == 'Estorno' else item['valor']
                 total_receita += valor
                 receitas_por_data[item['competencia']] += valor
 
-            receitas_por_data = dict(sorted(receitas_por_data.items(
-            ), key=lambda x: datetime.strptime(x[0], '%Y-%m-%d')))
+                if item['tipoLancamento']['nome'] == 'Estorno':
+                    total_estornos += valor
+                    estornos_por_data[item['competencia']] += valor
 
-            return render_template('table.html', data=data, total_receita=total_receita, receitas_por_data=receitas_por_data)
+            receitas_por_data = dict(sorted(receitas_por_data.items(),
+                                            key=lambda x: datetime.strptime(x[0], '%Y-%m-%d')))
+            estornos_por_data = dict(sorted(estornos_por_data.items(),
+                                            key=lambda x: datetime.strptime(x[0], '%Y-%m-%d')))
+
+            return render_template('table.html', data=data, total_receita=total_receita,
+                                   total_estornos=total_estornos, receitas_por_data=receitas_por_data,
+                                   estornos_por_data=estornos_por_data)
         else:
             error = f"Erro ao consultar API: {response_api.status_code}"
             return render_template('index.html', error=error)
@@ -93,7 +107,6 @@ def download_excel():
             'Número': item['numeroReceita'],
             'Valor': -item['valor'] if item['tipoLancamento']['nome'] == 'Estorno' or item['tipoReceitaLancada']['codigo'] in [3, 4, 5] else item['valor'],
             'Fonte': item['tipoFonteRecurso']['codigo'],
-            # 'CO': item['co']['codigo'] tentar incluir CO na table e no excel
         } for item in data]
 
         df = pd.DataFrame(filtered_data)
