@@ -1,12 +1,9 @@
 from flask import Flask, render_template, request
 import requests
-import locale
+import babel.numbers  # Importe o módulo 'babel' para formatação de moeda
 from collections import defaultdict
 from datetime import datetime
 
-
-# Configuração da localidade
-locale.setlocale(locale.LC_ALL, 'pt_BR.utf8')
 
 app = Flask(__name__)
 
@@ -20,7 +17,9 @@ def brl_filter(value):
 
 
 def format_brl(value):
-    return locale.currency(value, grouping=True)
+    # Formata o valor como moeda BRL
+    formatted_value = babel.numbers.format_currency(value, 'BRL', locale='pt_BR')
+    return formatted_value
 
 
 @app.route('/', methods=['GET', 'POST'])
