@@ -3,21 +3,21 @@ import requests
 import locale
 from collections import defaultdict
 from datetime import datetime
-import locale
 
-# Definir localidade para português do Brasil
-try:
-    locale.setlocale(locale.LC_ALL, 'pt_BR.utf8')
-except locale.Error:
-    pass  # Caso não seja possível definir a localidade, continua sem modificar
 
 app = Flask(__name__)
 
 API_URL = 'https://sagrescaptura.tce.pb.gov.br/api/v1/receitas-orcamentarias'
 TOKEN = '3938a148-5b81-4ad7-ba2c-dcc68e5106ff'
 
-# Configurar localidade para português do Brasil
-locale.setlocale(locale.LC_ALL, 'pt_BR.UTF-8')
+
+def format_brl(value):
+    # Defina aqui a localidade para formatação
+    locale.setlocale(locale.LC_ALL, 'pt_BR.utf8')
+    formatted_value = locale.currency(value, grouping=True)
+    # Resetar a localidade para evitar problemas
+    locale.resetlocale(locale.LC_ALL)
+    return formatted_value
 
 
 def format_brl(value):
