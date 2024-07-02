@@ -12,8 +12,8 @@ app = Flask(__name__)
 API_URL = 'https://sagrescaptura.tce.pb.gov.br/api/v1/receitas-orcamentarias'
 TOKEN = '3938a148-5b81-4ad7-ba2c-dcc68e5106ff'
 
-# Configurar localidade para português do Brasil
-locale.setlocale(locale.LC_ALL, 'pt_BR.UTF-8')
+# # Configurar localidade para português do Brasil
+# locale.setlocale(locale.LC_ALL, 'pt_BR.UTF-8')
 
 
 def format_brl(value):
