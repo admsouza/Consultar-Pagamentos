@@ -3,6 +3,13 @@ import requests
 import locale
 from collections import defaultdict
 from datetime import datetime
+import locale
+
+# Definir localidade para português do Brasil
+try:
+    locale.setlocale(locale.LC_ALL, 'pt_BR.utf8')
+except locale.Error:
+    pass  # Caso não seja possível definir a localidade, continua sem modificar
 
 app = Flask(__name__)
 
