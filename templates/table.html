@@ -1,56 +1,27 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="pt-BR">
 
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Resultados da Consulta</title>
-    <link rel="icon" type="image/x-icon" href="{{ url_for('static', filename='favicon.ico') }}">
     <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='tabel.css') }}">
-
-    <style>
-        .center-align {
-            text-align: center;
-        }
-
-        .vertical-center {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            min-height: 100vh;
-        }
-
-        .table-wrapper {
-            width: 50%;
-            margin: 0 auto;
-            text-align: center;
-        }
-
-        table {
-            width: 100%;
-            border-collapse: collapse;
-            margin-top: 20px;
-        }
-
-        table,
-        th,
-        td {
-            border: 1px solid black;
-        }
-
-        th,
-        td {
-            padding: 10px;
-        }
-    </style>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script> <!-- Adicione o Chart.js -->
 </head>
 
 <body>
     <a href="/" class="center-align">Voltar</a>
+
+    </div>
     <h1 class="center-align">Resultados da Consulta</h1>
     <h2 class="center-align">Total de Receitas<br>{{ total_receita | brl }}</h2>
-
-    <h2 class="center-align">Total de Estornos<br>{{ total_estornos | brl }}</h2>
+    <h3 class="dedu">Total de Estornos<br>{{ total_estornos | brl }}</h3>
+    <h3 class="dedu">Total de Deduções<br>{{ total_deducao_fundeb | brl }}</h3>
+    <h2 class="center-align">Receitas Líquidas<br>{{ total_receita_liquida | brl }}</h2>
+        <!-- Gráfico -->
+        <h3 class="center-align">Arrecadação e Estornos</h3>
+        <div style="width: 80%; margin: auto;">
+            <canvas id="myChart"></canvas>
 
     <form action="/" method="POST">
         <div class="center-align">
@@ -64,7 +35,7 @@
             <thead>
                 <tr>
                     <th>Data</th>
-                    <th>Soma de Estornos</th>
+                    <th>Valor</th>
                 </tr>
             </thead>
             <tbody>
@@ -84,7 +55,7 @@
             <thead>
                 <tr>
                     <th>Data</th>
-                    <th>Soma de Receitas</th>
+                    <th>Valor</th>
                 </tr>
             </thead>
             <tbody>
@@ -97,6 +68,105 @@
             </tbody>
         </table>
     </div>
+
+    <h3 class="center-align">Deduções Fundeb Agrupadas por Data</h3>
+    <div class="table-wrapper">
+        <table>
+            <thead>
+                <tr>
+                    <th>Data</th>
+                    <th>Valor</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for data, soma in deducoes_fundeb_por_data.items() %}
+                <tr>
+                    <td>{{ data }}</td>
+                    <td>{{ soma | brl }}</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+
+    
+
+    <script>
+        // Obtém os dados do Flask e formata para o gráfico
+        var receitasData = {{ receitas_por_data | tojson }};
+        var estornosData = {{ estornos_por_data | tojson }};
+        var deducoesData = {{ deducoes_fundeb_por_data | tojson }};
+
+        // Transforma as chaves em array para o eixo X (datas)
+        var labels = Object.keys(receitasData);
+
+        // Transforma os valores em array para os datasets
+        var receitasValues = Object.values(receitasData);
+        var estornosValues = Object.values(estornosData);
+        var deducoesValues = Object.values(deducoesData);
+
+        // Encontra a data com a maior soma de receitas
+        var dataMaiorSoma = '';
+        var maiorSoma = 0;
+        Object.keys(receitasData).forEach(function(key) {
+            if (receitasData[key] > maiorSoma) {
+                maiorSoma = receitasData[key];
+                dataMaiorSoma = key;
+            }
+        });
+
+        // Configuração do gráfico
+        var ctx = document.getElementById('myChart').getContext('2d');
+        var myChart = new Chart(ctx, {
+            type: 'bar',
+            data: {
+                labels: labels,
+                datasets: [{
+                    label: 'Arrecadação',
+                    data: receitasValues,
+                    backgroundColor: 'rgba(54, 162, 235, 0.5)',
+                    borderColor: 'rgba(54, 162, 235, 1)',
+                    borderWidth: 1
+                }, {
+                    label: 'Estornos',
+                    data: estornosValues,
+                    backgroundColor: 'rgba(255, 99, 132, 0.5)',
+                    borderColor: 'rgba(255, 99, 132, 1)',
+                    borderWidth: 1
+                }]
+            },
+            options: {
+                scales: {
+                    yAxes: [{
+                        ticks: {
+                            beginAtZero: true
+                        }
+                    }]
+                },
+                tooltips: {
+                    callbacks: {
+                        label: function(tooltipItem, data) {
+                            var datasetLabel = data.datasets[tooltipItem.datasetIndex].label || '';
+                            var value = tooltipItem.yLabel;
+                            return datasetLabel + ': ' + value.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
+                        }
+                    }
+                }
+            }
+        });
+
+        // Destaca a data com a maior soma de receitas
+        if (dataMaiorSoma) {
+            var maiorSomaIndex = labels.indexOf(dataMaiorSoma);
+            if (maiorSomaIndex !== -1) {
+                var dataset = myChart.data.datasets[0];
+                var meta = dataset._meta[Object.keys(dataset._meta)[0]];
+                var rect = meta.data[maiorSomaIndex]._model;
+                ctx.fillStyle = 'rgba(255, 159, 64, 0.2)';
+                ctx.fillRect(rect.x, rect.y, rect.width, rect.height);
+            }
+        }
+    </script>
 
 </body>
 

@@ -4,8 +4,8 @@ body {
   align-items: center;
   height: 100vh;
   margin: 0;
-  background-color: #f2f2f2;
   font-family: Arial, sans-serif;
+  color: #fff; /* Define a cor do texto para branco */
 }
 
 .container {
@@ -14,19 +14,19 @@ body {
 
 .consultation-form {
   width: 80%;
-  max-width: 800px; /* Aumentando o tamanho máximo do formulário */
+  max-width: 800px;
   padding: 20px;
   border: 1px solid #ccc;
   border-radius: 8px;
-  background-color: #fff;
+  background-color: #333; /* Fundo escuro para o formulário */
   box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-  margin-top: 20px; /* Espaço acima do formulário */
-  display: inline-block; /* Para centralizar o formulário */
-  text-align: left; /* Alinhar texto à esquerda dentro do formulário */
+  margin-top: 20px;
+  display: inline-block;
+  text-align: left;
 }
 
 h1 {
-  color: #333;
+  color: #fff; /* Título em branco */
 }
 
 label,
@@ -39,63 +39,15 @@ button {
 input[type="text"],
 input[type="date"],
 button {
-  width: calc(100% - 22px); /* Ajustando largura para considerar margem */
+  width: calc(100% - 22px);
   padding: 10px;
   font-size: 16px;
   border: 1px solid #ccc;
   border-radius: 4px;
-  margin-right: 10px; /* Espaço entre input e borda do formulário */
-}
-
-
-body {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  height: 100vh;
-  margin: 0;
-  background-color: #f2f2f2;
-  font-family: Arial, sans-serif;
-
-
-.container {
+  margin-right: 10px;
   text-align: center;
-}
-
-.consultation-form {
-  width: 80%;
-  max-width: 800px; /* Aumentando o tamanho máximo do formulário */
-  padding: 20px;
-  border: 1px solid #ccc;
-  border-radius: 8px;
-  background-color: #fff;
-  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-  margin-top: 20px; /* Espaço acima do formulário */
-  display: inline-block; /* Para centralizar o formulário */
-  text-align: left; /* Alinhar texto à esquerda dentro do formulário */
-}
-
-h1 {
-  color: #333;
-}
-
-label,
-input,
-button {
-  display: block;
-  margin-bottom: 10px;
-}
-
-input[type="text"],
-input[type="date"],
-button {
-  width: calc(100% - 22px); /* Ajustando largura para considerar margem */
-  padding: 10px;
-  font-size: 16px;
-  border: 1px solid #ccc;
-  border-radius: 4px;
-  margin-right: 10px; /* Espaço entre input e borda do formulário */
-  text-align: center;
+  background-color: #444; /* Fundo escuro para inputs e botões */
+  color: #fff; /* Texto em branco */
 }
 
 button {
@@ -104,7 +56,7 @@ button {
   border: none;
   border-radius: 4px;
   cursor: pointer;
-  width: 100%; /* Ocupa toda a largura do container */
+  width: 100%;
 }
 
 button:hover {

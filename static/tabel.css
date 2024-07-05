@@ -1,0 +1,40 @@
+.center-align {
+    text-align: center;
+}
+
+
+.vertical-center {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 100vh;
+}
+
+.table-wrapper {
+    width: 90%; /* Use uma porcentagem maior para telas menores */
+    max-width: 600px; /* Limite o tamanho máximo para telas grandes */
+    margin: 0 auto;
+    text-align: center;
+}
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 20px;
+}
+
+table,
+th,
+td {
+    border: 1px solid black;
+}
+
+th,
+td {
+    padding: 10px;
+}
+
+.dedu{
+    text-align: center;
+    color: red;
+}
