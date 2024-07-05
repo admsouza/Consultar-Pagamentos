@@ -6,7 +6,11 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Resultados da Consulta</title>
     <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='tabel.css') }}">
+<<<<<<< HEAD
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script> <!-- Adicione o Chart.js -->
+=======
+
+>>>>>>> f4050eeb986f1b4fe101e75f836685cc11727681
 </head>
 
 <body>
@@ -15,6 +19,7 @@
     </div>
     <h1 class="center-align">Resultados da Consulta</h1>
     <h2 class="center-align">Total de Receitas<br>{{ total_receita | brl }}</h2>
+<<<<<<< HEAD
     <h3 class="dedu">Total de Estornos<br>{{ total_estornos | brl }}</h3>
     <h3 class="dedu">Total de Deduções<br>{{ total_deducao_fundeb | brl }}</h3>
     <h2 class="center-align">Receitas Líquidas<br>{{ total_receita_liquida | brl }}</h2>
@@ -22,6 +27,14 @@
         <h3 class="center-align">Arrecadação e Estornos</h3>
         <div style="width: 80%; margin: auto;">
             <canvas id="myChart"></canvas>
+=======
+
+    <h3 class="dedu">Total de Estornos<br>{{ total_estornos | brl }}</h3>
+
+    <h3 class="dedu">Total de Deduções<br>{{ total_deducao_fundeb | brl }}</h3>
+
+    <h2 class="center-align">Receitas Líquidas<br>{{ total_receita_liquida | brl }}</h2>
+>>>>>>> f4050eeb986f1b4fe101e75f836685cc11727681
 
     <form action="/" method="POST">
         <div class="center-align">
@@ -42,6 +55,7 @@
                 {% for data, soma in estornos_por_data.items() %}
                 <tr>
                     <td>{{ data }}</td>
+           
                     <td>{{ soma | brl }}</td>
                 </tr>
                 {% endfor %}
@@ -62,6 +76,29 @@
                 {% for data, soma in receitas_por_data.items() %}
                 <tr>
                     <td>{{ data }}</td>
+           
+                    <td>{{ soma | brl }}</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+
+    <h3 class="center-align">Total de Deduções</h3>
+    <div class="table-wrapper">
+        <table>
+            <thead>
+                <tr>
+                    <th>Data</th>
+                  
+                    <th>Valor</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for data, soma in deducoes_fundeb_por_data.items() %}
+                <tr>
+                    <td>{{ data }}</td>
+              
                     <td>{{ soma | brl }}</td>
                 </tr>
                 {% endfor %}
