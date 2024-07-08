@@ -38,3 +38,9 @@ td {
     text-align: center;
     color: red;
 }
+.title {
+    font-weight: bold;
+    background-color: rgb(171, 171, 238);
+    padding: 8px 12px; 
+    text-align: center; 
+}
