@@ -1,32 +1,61 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="pt-BR">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Consulta de Pagamentos</title>
+    <link
+      rel="stylesheet"
+      href="{{ url_for('static', filename='index.css') }}"
+    />
+  </head>
+  <body>
+    <h1>Consulta de Pagamentos</h1>
+    <form method="POST">
+      <label for="start_date">Data de Início:</label>
+      <input type="date" id="start_date" name="start_date" required />
+      <br />
+      <label for="end_date">Data de Fim:</label>
+      <input type="date" id="end_date" name="end_date" required />
+      <br />
+      <label for="unidade_gestora">Unidade Gestora:</label>
+      <input type="text" id="unidade_gestora" name="unidade_gestora" required />
+      <br />
+      <button type="submit">Consultar</button>
+    </form>
 
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='index.css') }}">
-    <title>Consulta de Receitas</title>
-</head>
-
-<body>
-    <div class="container">
-        <h1>Consulta de Receitas</h1>
-        <form method="POST" action="/" class="consultation-form">
-            <label for="cod_unidade">Código da Unidade Gestora:</label>
-            <input type="text" id="cod_unidade" name="cod_unidade" required><br><br>
-
-            <label for="data_minima">Data Inicial:</label>
-            <input type="date" id="data_minima" name="data_minima" required><br><br>
-
-            <label for="data_maxima">Data Final:</label>
-            <input type="date" id="data_maxima" name="data_maxima" required><br><br>
-
-            <button type="submit">Consultar</button>
-        </form>
-        {% if error %}
-        <p class="error-message">{{ error }}</p>
-        {% endif %}
-    </div>
-</body>
-
+    {% if data %}
+    <h2>Resultados da Consulta</h2>
+    <table border="1">
+      <thead>
+        <tr>
+        <th>Empenho</th>
+          <th>Nome Credor</th>
+          
+          <th>Pago</th>
+          <th>Liquido</th>
+          <th>Código Agência</th>
+          <th>Código Conta</th>
+          <th>Denominação Conta</th>
+          <th>Denominação Tipo Conta</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for item in data %}
+        <tr>
+          <td>{{ item['dadosPrincipais'].get('numEmpenho', '') }}</td>
+          <td>{{ item['dadosPrincipais'].get('nomeCredor', '') }}</td>
+          <td>{{ item['dadosPagamento'].get('dataPagamento', '') }}</td>
+          <td>{{ item['dadosPagamento'].get('pago', '') }}</td>
+          <td>{{ item['dadosPagamento'].get('liquido', '') }}</td>
+          <td>{{ item['dadosPagamento'].get('codigoAgencia', '') }}</td>
+          <td>{{ item['dadosPagamento'].get('codigoConta', '') }}</td>
+          <td>{{ item['dadosPagamento'].get('denominacaoConta', '') }}</td>
+          <td>{{ item['dadosPagamento'].get('denominacaoTipoConta', '') }}</td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+    {% endif %}
+  </body>
 </html>

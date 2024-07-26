@@ -1,70 +1,107 @@
-body {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  height: 100vh;
+/* Reset básico */
+* {
   margin: 0;
-  font-family: Arial, sans-serif;
-  color: #fff; /* Define a cor do texto para branco */
+  padding: 0;
+  box-sizing: border-box;
 }
 
-.container {
-  text-align: center;
-}
-
-.consultation-form {
-  width: 80%;
-  max-width: 800px;
+/* Corpo e fonte */
+body {
+  font-family: 'Arial', sans-serif;
+  background-color: #f4f4f9;
+  color: #333;
+  line-height: 1.6;
   padding: 20px;
-  border: 1px solid #ccc;
+}
+
+/* Cabeçalho */
+h1 {
+  color: #2c3e50;
+  margin-bottom: 20px;
+}
+
+/* Formulário */
+form {
+  background: #fff;
+  padding: 20px;
   border-radius: 8px;
-  background-color: #333; /* Fundo escuro para o formulário */
   box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+  max-width: 600px;
+  margin: auto;
+}
+
+form label {
+  display: block;
+  margin-bottom: 8px;
+  font-weight: bold;
+}
+
+form input[type="date"],
+form input[type="text"],
+form button {
+  width: 100%;
+  padding: 10px;
+  margin-bottom: 10px;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  font-size: 16px;
+}
+
+form button {
+  background-color: #3498db;
+  color: white;
+  border: none;
+  cursor: pointer;
+}
+
+form button:hover {
+  background-color: #2980b9;
+}
+
+/* Tabela */
+table {
+  width: 100%;
+  border-collapse: collapse;
   margin-top: 20px;
-  display: inline-block;
+}
+
+table thead {
+  background-color: #3498db;
+  color: white;
+}
+
+table th, table td {
+  padding: 12px;
   text-align: left;
 }
 
-h1 {
-  color: #fff; /* Título em branco */
+table th {
+  font-weight: bold;
 }
 
-label,
-input,
-button {
-  display: block;
-  margin-bottom: 10px;
+table tbody tr:nth-child(even) {
+  background-color: #f2f2f2;
 }
 
-input[type="text"],
-input[type="date"],
-button {
-  width: calc(100% - 22px);
-  padding: 10px;
-  font-size: 16px;
-  border: 1px solid #ccc;
-  border-radius: 4px;
-  margin-right: 10px;
-  text-align: center;
-  background-color: #444; /* Fundo escuro para inputs e botões */
-  color: #fff; /* Texto em branco */
+table tbody tr:hover {
+  background-color: #e1e1e1;
 }
 
-button {
-  background-color: #007bff;
-  color: white;
-  border: none;
-  border-radius: 4px;
-  cursor: pointer;
-  width: 100%;
-}
+/* Responsividade */
+@media (max-width: 768px) {
+  table {
+      display: block;
+      overflow-x: auto;
+      white-space: nowrap;
+  }
 
-button:hover {
-  background-color: #0056b3;
-}
+  form {
+      padding: 10px;
+  }
 
-.error-message {
-  color: red;
-  text-align: center;
-  margin-top: 10px;
+  form input[type="date"],
+  form input[type="text"],
+  form button {
+      font-size: 14px;
+  }
 }
