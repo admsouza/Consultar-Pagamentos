@@ -1,14 +1,14 @@
 from flask import Flask, render_template, request
 import requests
 from collections import defaultdict
-import locale
 from datetime import datetime
+from babel import Locale, dates, numbers
 
 app = Flask(__name__)
 
 API_URL = 'https://sagresonline.tce.pb.gov.br/api/v2/municipal/execucao-orcamentaria/pagamentos'
 
-locale.setlocale(locale.LC_ALL, 'pt_BR.UTF-8')  # Define o local para formato de moeda brasileira
+locale_br = Locale('pt', 'BR')
 
 @app.route('/', methods=['GET', 'POST'])
 def consult_payments():
@@ -55,10 +55,10 @@ def consult_payments():
     # Formata os valores para moeda brasileira
     formatted_data = [
         {
-            'dataPagamento': data_pagamento,
-            'pago': locale.currency(valores['pago'], grouping=True),
-            'retido': locale.currency(valores['retido'], grouping=True),
-            'liquido': locale.currency(valores['liquido'], grouping=True)
+            'dataPagamento': dates.format_date(datetime.strptime(data_pagamento, '%Y-%m-%d'), locale=locale_br),
+            'pago': numbers.format_currency(valores['pago'], 'BRL', locale=locale_br),
+            'retido': numbers.format_currency(valores['retido'], 'BRL', locale=locale_br),
+            'liquido': numbers.format_currency(valores['liquido'], 'BRL', locale=locale_br)
         }
         for data_pagamento, valores in sorted_data
     ]
